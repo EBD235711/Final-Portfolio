@@ -20,7 +20,3 @@ To run the application locally:
 ## Technologies Used
 - Frontend: HTML, CSS, JavaScript, React.js
 - Notifications: Email or Browser Notifications (optional)
-
-## Contributing
-Contributions to the project are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
-
