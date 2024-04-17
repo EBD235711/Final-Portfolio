@@ -15,15 +15,10 @@ This web application is designed to help users manage their time effectively by 
 To run the application locally:
 1. Clone this repository to your local machine.
 2. Navigate to the project directory.
-3. Install dependencies using `npm install`.
-4. Start the application using `npm start`.
-5. Access the application in your web browser at `http://localhost:3000`.
+3. Access the application in your web browser at `http://localhost:3000`.
 
 ## Technologies Used
 - Frontend: HTML, CSS, JavaScript, React.js
-- Backend: Node.js, Express.js
-- Database: MongoDB
-- Authentication: JSON Web Tokens (JWT)
 - Notifications: Email or Browser Notifications (optional)
 
 ## Contributing
