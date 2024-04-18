@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"],
+        input[type="date"],
+        textarea,
+        select,
+        button {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: calc(100% - 22px);
+            box-sizing: border-box;
+        }
+
+        input[type="date"] {
+            width: calc(50% - 6px);
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .edit-delete {
+            margin-left: 10px;
+        }
+
+        .edit-delete button {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Task Management</h1>
+        <p> Our project vision is to create a modern web application that helps people manage their time better. Whether it is for work, study, or personal life, our goal is to provide a simple and intuitive platform that makes it easy for users to plan their tasks, meet deadlines, and stay organized. </p>
+        <h2>Add Task</h2>
+        <form id="taskForm">
+            <input type="text" id="projectInput" placeholder="Task Name" required>
+            <input type="date" id="deadlineInput" required>
+            <input type="text" id="teamInput" placeholder="Assigned Team" required>
+            <select id="priorityInput" required>
+                <option value="" disabled selected>Select Priority</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </select>
+            <textarea id="projectView" placeholder="Additional Information"></textarea>
+            <button type="submit">Add Task</button>
+        </form>
+
+        <h2>Tasks</h2>
+        <p><i>All of your task will save until you complete or delete them!</i></p>
+        <ul id="taskList"></ul>
+        <p><b>Created by Ethan Darragh</b></p>
+    </div>
+
+    <script>
+        document.getElementById("taskForm").addEventListener("submit", function (event) {
+            event.preventDefault(); 
+            var projectInput = document.getElementById("projectInput").value;
+            var deadlineInput = document.getElementById("deadlineInput").value;
+            var teamInput = document.getElementById("teamInput").value;
+            var priorityInput = document.getElementById("priorityInput").value;
+            var projectViewInput = document.getElementById("projectView").value;
+
+            if (!projectInput || !deadlineInput || !teamInput || !priorityInput) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+
+            var project = {
+                name: projectInput,
+                deadline: deadlineInput,
+                team: teamInput,
+                priority: priorityInput,
+                view: projectViewInput
+            };
+
+            var projects = JSON.parse(localStorage.getItem("projects")) || [];
+            projects.push(project);
+            localStorage.setItem("projects", JSON.stringify(projects));
+
+            displayProjects();
+            document.getElementById("taskForm").reset(); 
+        });
+
+        function editProject(index) {
+            var projects = JSON.parse(localStorage.getItem("projects")) || [];
+            var updatedProjectName = prompt("Enter updated project name:", projects[index].name);
+            var updatedDeadline = prompt("Enter updated deadline:", projects[index].deadline);
+            var updatedTeam = prompt("Assign members to task:", projects[index].team);
+            var updatedPriority = prompt("Change the level of Priority: ", projects[index].priority);
+            var updatedView = prompt("Enter updated view:", projects[index].view);
+            
+            if (updatedProjectName && updatedDeadline && updatedTeam && updatedPriority && updatedView) {
+                projects[index].name = updatedProjectName;
+                projects[index].deadline = updatedDeadline;
+                projects[index].team = updatedTeam;
+                projects[index].priority = updatedPriority;
+                projects[index].view = updatedView;
+                localStorage.setItem("projects", JSON.stringify(projects));
+                displayProjects();
+            }
+        }
+
+        function deleteProject(index) {
+            var projects = JSON.parse(localStorage.getItem("projects")) || [];
+            projects.splice(index, 1);
+            localStorage.setItem("projects", JSON.stringify(projects));
+            displayProjects();
+        }
+
+        function displayProjects() {
+            var projectList = document.getElementById("taskList");
+            projectList.innerHTML = "";
+
+            var projects = JSON.parse(localStorage.getItem("projects")) || [];
+
+            projects.forEach(function (project, index) {
+                var li = document.createElement("li");
+                li.innerHTML = "Task Name: " + project.name + "<br><br>" +
+                                "Deadline: " + project.deadline + "<br><br>" +
+                                "Assigned to: " + project.team + "<br><br>" +
+                                "Priority: " + project.priority + "<br><br>" +
+                                "Info: " + project.view + "<br><br>";
+
+                var editButton = document.createElement("button");
+                editButton.textContent = "Edit";
+                editButton.addEventListener("click", function () {
+                    editProject(index);
+                });
+
+                var deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete";
+                deleteButton.addEventListener("click", function () {
+                    deleteProject(index);
+                });
+
+                var editDeleteDiv = document.createElement("div");
+                editDeleteDiv.classList.add("edit-delete");
+                editDeleteDiv.appendChild(editButton);
+                editDeleteDiv.appendChild(deleteButton);
+
+                li.appendChild(editDeleteDiv);
+                projectList.appendChild(li);
+            });
+        }
+
+        displayProjects();
+    </script>
+</body>
+
+</html>
